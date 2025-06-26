@@ -68,3 +68,65 @@ export const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+//get one product
+
+export const getAllProduct = async (req, res, next) => {
+  try {
+    const product = await Product.find();
+    res.status(200).json({
+      message: "All products fetched successfully",
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//get one product
+
+export const getOneProduct = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "product not found",
+      });
+    }
+    res.status(200).json({
+      message: "product fetched successfully",
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//update product 
+
+export const updateProduct = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const updateData = req.body;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
